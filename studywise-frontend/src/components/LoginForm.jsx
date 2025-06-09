@@ -22,7 +22,9 @@ export default function LoginForm(){
             [e.target.name]:e.target.value,
         })
     }
-
+    const handleNavigateRegister = (e) => {
+        navigate("/register");
+    }
     const getCsfrTokenDefault = () => {
         const name = "XSRF-TOKEN=";
         const decodedCookie = decodeURIComponent(document.cookie);
@@ -95,10 +97,12 @@ export default function LoginForm(){
             className="w-full p-2 border rounded"
             required
         />
-
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-            Giriş Yap
-        </button>
+        <div className="div flex justify-center gap-4">
+            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+                Giriş Yap
+            </button>
+            <button type = "button" onClick={handleNavigateRegister} className="bg-green-400 text-white py-2 px-4 rounded"> Kayıt Ol</button>
+        </div>
         </form>
     );
 }
