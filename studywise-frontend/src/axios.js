@@ -15,9 +15,7 @@ function getCsrfTokenDefault() {
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.MODE === "development"
-    ? "http://localhost:8000"
-    : "https://study-app-1-oa2e.onrender.com",
+  baseURL: "https://study-app-1-oa2e.onrender.com",
   withCredentials: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",

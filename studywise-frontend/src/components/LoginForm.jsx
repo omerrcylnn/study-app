@@ -7,10 +7,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const BASE_URL =
-    import.meta.env.MODE === "development"
-      ? "http://localhost:8000"
-      : "https://study-app-1-oa2e.onrender.com";
+  const BASE_URL = "https://study-app-1-oa2e.onrender.com";
 
   const [formData, setFormData] = useState({
     email: "",
