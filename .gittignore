@@ -1,0 +1,12 @@
+# Node / React
+studywise-frontend/node_modules
+studywise-frontend/dist
+
+# Laravel
+studywise-backend/vendor
+studywise-backend/storage
+studywise-backend/.env
+studywise-backend/.phpunit.result.cache
+
+# MacOS / System
+.DS_Store
