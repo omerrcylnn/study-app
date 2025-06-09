@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
+            $table->string('title')->default('');
             $table->text('description')->nullable();
             $table->date('due_date')->nullable();
             $table->text('label')->nullable();
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */

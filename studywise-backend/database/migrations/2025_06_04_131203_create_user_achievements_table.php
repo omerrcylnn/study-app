@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('achievement_id')->constrained()->onDelete('cascade');
-            $table->timestamp('earned_at');
+            $table->timestamp('earned_at')->useCurrent(); // 🎯
             $table->timestamps();
 
             $table->unique(['user_id', 'achievement_id']); // aynı başarıyı 2 kere almasın

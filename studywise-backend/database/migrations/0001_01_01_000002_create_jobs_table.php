@@ -13,30 +13,30 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('queue')->index();
+            $table->string('queue')->default('')->index();
             $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
+            $table->unsignedTinyInteger('attempts')->default(0);
             $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
+            $table->unsignedInteger('available_at')->default(0);
+            $table->unsignedInteger('created_at')->default(0);
         });
 
         Schema::create('job_batches', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('name');
-            $table->integer('total_jobs');
-            $table->integer('pending_jobs');
-            $table->integer('failed_jobs');
+            $table->string('name')->default('');
+            $table->integer('total_jobs')->default(0);
+            $table->integer('pending_jobs')->default(0);
+            $table->integer('failed_jobs')->default(0);
             $table->longText('failed_job_ids');
             $table->mediumText('options')->nullable();
             $table->integer('cancelled_at')->nullable();
-            $table->integer('created_at');
+            $table->integer('created_at')->default(0);
             $table->integer('finished_at')->nullable();
         });
 
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('uuid')->unique();
+            $table->string('uuid')->unique()->default('');
             $table->text('connection');
             $table->text('queue');
             $table->longText('payload');

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('achievements', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // örn: first_pomodoro
-            $table->string('name');
+            $table->string('code')->unique();
+            $table->string('name')->default('');
             $table->text('description')->nullable();
-            $table->string('icon')->nullable(); // emoji ya da ikon class
+            $table->string('icon')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('achivements');
+        Schema::dropIfExists('achievements');
     }
 };

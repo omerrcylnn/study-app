@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('pomodoro_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['focus', 'break']);
+            $table->string('type')->default('focus'); // SQLite enum yerine string
             $table->timestamp('start_time');
             $table->timestamp('end_time');
-            $table->integer('duration'); // saniye
+            $table->integer('duration')->default(0); // saniye
             $table->timestamps();
         });
     }
