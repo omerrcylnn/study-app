@@ -34,7 +34,10 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN a2enmod rewrite
 
 # Laravel config cache
-RUN php artisan config:clear && php artisan config:cache
-
+RUN php artisan config:clear \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php artisan config:cache
+ 
 EXPOSE 80
 CMD ["apache2-foreground"]
