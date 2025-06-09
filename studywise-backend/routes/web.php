@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 
 // Ana sayfa (gerekirse kullanılır)
 Route::get('/', function () {
-    return view('welcome');
+    return response() -> json(['status' => 'API ONLINE']);
 });
 
 // React'tan gelen kayıt istekleri için cookie + csrf destekli route
