@@ -15,10 +15,12 @@ function getCsrfTokenDefault() {
 }
 
 const api = axios.create({
-    baseURL: "http://localhost:8000",
-    withCredentials: true,
-    xsrfCookieName: "XSRF-TOKEN",
-    xsrfHeaderName: "X-XSRF-TOKEN",
+  baseURL: import.meta.env.MODE === "development"
+    ? "http://localhost:8000"
+    : "https://study-app-1-oa2e.onrender.com",
+  withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
 // Interceptor: Her istekten önce CSRF token'ı header'a ekle

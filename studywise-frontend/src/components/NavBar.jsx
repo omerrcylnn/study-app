@@ -7,10 +7,14 @@ import ThemeToggle from "./ThemeToggle";
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const BASE_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:8000"
+      : "https://study-app-1-oa2e.onrender.com";
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+      await axios.get(`${BASE_URL}/sanctum/csrf-cookie`, {
         withCredentials: true,
       });
 
@@ -20,7 +24,7 @@ export default function NavBar() {
         ?.split("=")[1];
 
       await axios.post(
-        "http://localhost:8000/logout",
+        `${BASE_URL}/logout`,
         {},
         {
           withCredentials: true,
@@ -29,6 +33,7 @@ export default function NavBar() {
           },
         }
       );
+
       logout();
       navigate("/login");
     } catch (error) {
