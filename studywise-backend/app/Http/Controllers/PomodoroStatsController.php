@@ -101,7 +101,7 @@ class PomodoroStatsController extends Controller
             }
 
             $labels = Task::where('user_id', $user->id)
-                ->selectRaw("COALESCE(label, 'Etiketsiz') as label, COUNT(*) as total_tasks, SUM(COALESCE(completed, 0)) as completed_tasks")
+                ->selectRaw("COALESCE(label, 'Etiketsiz') as label, COUNT(*) as total_tasks, SUM(CAST(completed AS INT)) as completed_tasks")
                 ->groupByRaw("COALESCE(label, 'Etiketsiz')")
                 ->get()
                 ->map(function ($row) {
