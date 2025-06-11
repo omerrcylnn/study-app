@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // 👈 bu eklendi
 use App\Models\PomodoroSession;
 use Carbon\Carbon;
 use App\Models\Task;
@@ -11,6 +12,11 @@ class PomodoroStatsController extends Controller
 {
     public function today()
     {
+        Log::info('📊 [today] endpoint çalıştı', [
+            'user' => Auth::user(),
+            'auth_check' => Auth::check(),
+        ]);
+
         $user = Auth::user();
         $today = Carbon::today();
 
@@ -27,8 +33,12 @@ class PomodoroStatsController extends Controller
 
     public function weekly()
     {
+        Log::info('📊 [weekly] endpoint çalıştı', [
+            'user_id' => optional(Auth::user())->id,
+        ]);
+
         $user = Auth::user();
-        $start = Carbon::now()->subDays(6)->startOfDay(); // 7 gün
+        $start = Carbon::now()->subDays(6)->startOfDay();
 
         $sessions = PomodoroSession::where('user_id', $user->id)
             ->where('type', 'focus')
@@ -53,6 +63,10 @@ class PomodoroStatsController extends Controller
 
     public function focusBreakRatio()
     {
+        Log::info('📊 [focusBreakRatio] endpoint çalıştı', [
+            'user_id' => optional(Auth::user())->id,
+        ]);
+
         $user = Auth::user();
 
         $sessions = PomodoroSession::where('user_id', $user->id)
@@ -72,11 +86,17 @@ class PomodoroStatsController extends Controller
             ],
         ]);
     }
+
     public function labelStats(Request $request)
     {
         try {
+            Log::info('📊 [labelStats] endpoint çalıştı', [
+                'user' => $request->user(),
+            ]);
+
             $user = $request->user();
             if (!$user) {
+                Log::warning('🚫 [labelStats] Kullanıcı yok!');
                 return response()->json(['message' => 'Unauthenticated'], 401);
             }
 
@@ -95,6 +115,10 @@ class PomodoroStatsController extends Controller
 
             return response()->json($labels);
         } catch (\Throwable $e) {
+            Log::error('🔥 [labelStats] hata: ' . $e->getMessage(), [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
             return response()->json([
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
