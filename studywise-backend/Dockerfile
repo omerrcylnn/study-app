@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# System updates
+# System updates + PostgreSQL driver dahil
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip
+    libpq-dev \
+    php-pgsql \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,6 +33,7 @@ RUN chown -R www-data:www-data /var/www/html \
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 
+# Enable Apache rewrite module
 RUN a2enmod rewrite
 
 # Laravel config cache
@@ -38,6 +41,6 @@ RUN php artisan config:clear \
  && php artisan route:clear \
  && php artisan view:clear \
  && php artisan config:cache
- 
+
 EXPOSE 80
 CMD ["apache2-foreground"]
