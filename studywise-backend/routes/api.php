@@ -6,7 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PomodoroStatsController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\GoalController;
-use App\Http\Controllers\userController;
+use App\Http\Controllers\UserController;
 // Şu an CSRF uyumu için register route'u web.php'de tanımlandı.
 // API endpoint'leri ileride burada tanımlanacak.
 
