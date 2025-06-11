@@ -7,7 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const BASE_URL = "https://study-app-1-oa2e.onrender.com";
+  const BASE_URL = "https://api.studyspart.xyz";
 
   const handleLogout = async () => {
     try {
