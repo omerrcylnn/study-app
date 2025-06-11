@@ -5,7 +5,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://study-app-tawny.vercel.app'],
+    'allowed_origins' => ['https://app.studyspark.xyz'],
 
     'allowed_origins_patterns' => [],
 
