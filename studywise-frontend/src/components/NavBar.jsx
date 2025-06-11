@@ -7,7 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const BASE_URL = "https://api.studyspart.xyz";
+  const BASE_URL = "https://api.studyspark.xyz";
 
   const handleLogout = async () => {
     try {
