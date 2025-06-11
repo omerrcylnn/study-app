@@ -73,22 +73,33 @@ class PomodoroStatsController extends Controller
         ]);
     }
     public function labelStats(Request $request)
-{
-    $userId = $request->user()->id;
+    {
+        try {
+            $user = $request->user();
+            if (!$user) {
+                return response()->json(['message' => 'Unauthenticated'], 401);
+            }
 
-    $labels = Task::where('user_id', $userId)
-        ->selectRaw('label, COUNT(*) as total_tasks, SUM(completed) as completed_tasks')
-        ->groupBy('label')
-        ->get()
-        ->map(function ($row) {
-            return [
-                'label' => $row->label ?? 'Etiketsiz',
-                'total_tasks' => $row->total_tasks,
-                'completed_tasks' => $row->completed_tasks,
-                'completion_rate' => round(($row->completed_tasks / max($row->total_tasks, 1)) * 100, 1),
-            ];
-        });
+            $labels = Task::where('user_id', $user->id)
+                ->selectRaw("COALESCE(label, 'Etiketsiz') as label, COUNT(*) as total_tasks, SUM(COALESCE(completed, 0)) as completed_tasks")
+                ->groupByRaw("COALESCE(label, 'Etiketsiz')")
+                ->get()
+                ->map(function ($row) {
+                    return [
+                        'label' => $row->label,
+                        'total_tasks' => $row->total_tasks,
+                        'completed_tasks' => $row->completed_tasks,
+                        'completion_rate' => round(($row->completed_tasks / max($row->total_tasks, 1)) * 100, 1),
+                    ];
+                });
 
-    return response()->json($labels);
-}
+            return response()->json($labels);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
+        }
+    }
 }

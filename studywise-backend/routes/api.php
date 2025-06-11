@@ -14,6 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/stats/today', [PomodoroStatsController::class, 'today']);
     Route::get('/stats/weekly', [PomodoroStatsController::class, 'weekly']);
     Route::get('/stats/focus-break-ratio', [PomodoroStatsController::class, 'focusBreakRatio']);
+    Route::get('/stats/by-label',[PomodoroStatsController::class,'labelStats']);
     Route::get('/tasks/today',[TaskController::class,'todayTasks']);
     Route::post('/tasks',[TaskController::class,'store']);
     Route::put('/tasks/{task}',[TaskController::class,'update']);
@@ -25,7 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/pomodoro',[PomodoroSessionController::class,'store']);
     Route::get('/user/achievements',[AchievementController::class,'userAchievements']);
     Route::get('/achievements/summary',[AchievementController::class,'summary']);
-    Route::get('/stats/by-label',[PomodoroStatsController::class,'labelStats']);
     Route::get('/goals', [GoalController::class, 'index']);
     Route::post('/goals', [GoalController::class, 'store']);
     Route::put('/goals/{goal}', [GoalController::class, 'update']);
