@@ -29,7 +29,7 @@ export default function RegisterForm() {
     return null;
   };
 
-  const BASE_URL = "https://study-app-1-oa2e.onrender.com"
+  const BASE_URL = "https://api.studyspark.xyz"
 
   const handleSubmit = async (e) => {
     e.preventDefault();

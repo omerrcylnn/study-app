@@ -15,7 +15,7 @@ function getCsrfTokenDefault() {
 }
 
 const api = axios.create({
-  baseURL: "https://study-app-1-oa2e.onrender.com",
+  baseURL: "https://api.studyspark.xyz",
   withCredentials: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",
