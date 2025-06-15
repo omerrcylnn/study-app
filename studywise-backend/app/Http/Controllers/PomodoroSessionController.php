@@ -44,6 +44,10 @@ class PomodoroSessionController extends Controller
 
     AchievementService::checkAndGrant($request->user());
 
-    return response()->json($session);
+    return response()->json([
+        'message' => "Pomodoro Kaydedildi",
+        'session' => $session,
+        'user' => $user
+    ]);
 }
 }
