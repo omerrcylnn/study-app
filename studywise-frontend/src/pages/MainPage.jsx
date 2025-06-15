@@ -16,7 +16,7 @@ import {
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, setUser, logout } = useAuth();
   const [columns, setColumns] = useState({
     "Ders": [],
     "İş": [],
