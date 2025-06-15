@@ -9,6 +9,7 @@ export default function PomodoroTimer({onStart}) {
   const [time, setTime] = useState(FOCUS_DURATION);
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
+  const [user, setUser] = useState(null);
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
   const sessionLoggedRef = useRef(false); // ✅ Tek kayıt için

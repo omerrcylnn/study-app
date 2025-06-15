@@ -21,6 +21,20 @@ const api = axios.create({
   xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
+// response interceptor 
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if(error.response && error.response.status === 401){
+            localStorage.removeItem("user");
+            window.location.href = "/login";
+        }
+
+        return Promise.reject(error);
+    }
+);
+
+
 // Interceptor: Her istekten önce CSRF token'ı header'a ekle
 api.interceptors.request.use(config => {
     const token = getCsrfTokenDefault();
