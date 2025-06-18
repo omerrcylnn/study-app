@@ -27,6 +27,10 @@ export default function MainPage() {
     "Öneri3":[],
     "Etiketsiz": []
   });
+
+  const primaryLabels = ["Ders", "İş", "Kişisel","Yan Proje"];
+  const extraLabels = ["Öneri1", "Öneri2" , "Öneri3", "Etiketsiz"];
+
   const [showFocusOverlay, setShowFocusOverlay] = useState(false);
   const [activeFilter, setActiveFilter] = useState("today");
   const [showModal, setShowModal] = useState(false);
@@ -43,6 +47,9 @@ export default function MainPage() {
   const [showPomodoro, setShowPomodoro] = useState(false);
   const [todayTasks, setTodayTasks] = useState([]);
   const [suggestedTask, setSuggestedTask] = useState(null);
+  const [showExtraColumns, setShowExtraColumns]  = useState(false);
+  const [pomodoroStats, setPomodoroStats] = useState({count: 0, totalMinutes:0});
+
 
   const getLabelColor = (label) => {
     switch (label) {
@@ -54,12 +61,26 @@ export default function MainPage() {
     }
   };
 
+  const visibleLabels = Object.entries(columns).filter(([label]) =>
+    showExtraColumns ? true : primaryLabels.includes(label)
+  );
+
   const handleTaskClick = (task) => {
     const confirmed = window.confirm(`"${task.title}"için odak modunu başlatmak ister misin?`);
     if(confirmed){
       setShowPomodoro(true);
       setShowFocusOverlay(true);
     };
+  }
+
+  const fetchPomodoroStats = async () => {
+    try{
+      const res = await api.get("/api/stats/today");
+        setPomodoroStats(res.data);
+    }
+    catch(error){
+      console.error("pomodoro statları çekerken hata:",error);
+    }
   }
 
   const fetchTasks = async (filter = "today") => {
@@ -70,6 +91,9 @@ export default function MainPage() {
         "İş": [],
         "Kişisel": [],
         "Yan Proje": [],
+        "Öneri1": [],
+        "Öneri2": [],
+        "Öneri3":[],
         "Etiketsiz": []
       };
       res.data.forEach(task => {
@@ -89,7 +113,6 @@ export default function MainPage() {
   };
 
   const checkDailyLogin = async () => {
-    console.log("annen");
     try{
       const res = await api.post("/api/user/daily-login");
       console.log("gelen cevap:",res.data)
@@ -117,7 +140,7 @@ export default function MainPage() {
     console.log("useEffect çalıştı");
     fetchTasks();
     checkDailyLogin();
-
+    fetchPomodoroStats();
   }, []);
 
   const onDragEnd = (result) => {
@@ -246,20 +269,30 @@ export default function MainPage() {
             )}
 
             {/* Filtre Butonları */}
-            <div className="flex space-x-2 mb-4">
-              {["past", "today", "tomorrow", "upcoming"].map(f => (
+            <div className="flex justify-between align-center">
+              <div className="flex space-x-2">  
+                {["past", "today", "tomorrow", "upcoming"].map(f => (
+                  <button
+                    key={f}
+                    onClick={() => { setActiveFilter(f); fetchTasks(f); }}
+                    className={`px-4 py-2 rounded transition ${
+                      activeFilter === f
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+                    }`}
+                  >
+                    {f === "past" ? "Geçmiş" : f === "today" ? "Bugün" : f === "tomorrow" ? "Yarın" : "Yaklaşan"}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-center">
                 <button
-                  key={f}
-                  onClick={() => { setActiveFilter(f); fetchTasks(f); }}
-                  className={`px-4 py-2 rounded transition ${
-                    activeFilter === f
-                      ? "bg-indigo-600 text-white"
-                      : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
-                  }`}
+                  onClick={() => setShowExtraColumns((prev) => !prev)}
+                  className="px-6 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow"
                 >
-                  {f === "past" ? "Geçmiş" : f === "today" ? "Bugün" : f === "tomorrow" ? "Yarın" : "Yaklaşan"}
+                  {showExtraColumns ? "Daha Az Göster" : "Tüm Kategorileri Göster"}
                 </button>
-              ))}
+              </div>
             </div>
 
             {/* Görev İlerlemesi */}
@@ -278,7 +311,7 @@ export default function MainPage() {
             {/* Görevler */}
             <DragDropContext onDragEnd={onDragEnd}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Object.entries(columns).map(([label, tasks]) => (
+                {visibleLabels.map(([label, tasks]) => (
                   <Droppable droppableId={label} key={label}>
                     {(provided) => (
                       <div
@@ -363,13 +396,18 @@ export default function MainPage() {
             </DragDropContext>
 
             {/* Pomodoro */}
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl w-full max-w-md space-y-4">
-              <h2 className="text-xl font-semibold mb-3">Pomodoro İstatistikleri</h2>
-              <p className="text-gray-700 dark:text-gray-300">
-                Bugün toplam 3 Pomodoro yaptın. Aferin sana! 💪
-              </p>
-            </div>
-
+            <div className="flex justify-center">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-lg shadow-xl w-full max-w-md space-y-4">
+                  <h2 className="text-xl font-semibold mb-3">Pomodoro İstatistikleri</h2>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Bugün toplam{" "}
+                    <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                      {pomodoroStats.count}
+                    </span>{" "}
+                    Pomodoro yaptın ({pomodoroStats.totalMinutes} dk). Aferin sana! 💪
+                  </p>
+                </div>
+            </div>            
             {/* Butonlar */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <button
