@@ -7,7 +7,11 @@ import api from "../axios";
 import NavBar from "../components/NavBar";
 import PomodoroTimer from "../components/PomodoroTimer";
 import { toast } from "react-hot-toast";
+import {Calendar, momentLocalizer} from 'react-big-calendar';
+import moment from "moment";
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import FocusOverlay from "../components/FocusOverlay";
+
 import {
   DragDropContext,
   Droppable,
@@ -27,6 +31,8 @@ export default function MainPage() {
     "Öneri3":[],
     "Etiketsiz": []
   });
+  const localizer = momentLocalizer(moment);
+  const[calendarEvents, setCalendarEvents] = useState([]);
 
   const primaryLabels = ["Ders", "İş", "Kişisel","Yan Proje"];
   const extraLabels = ["Öneri1", "Öneri2" , "Öneri3", "Etiketsiz"];
@@ -49,7 +55,7 @@ export default function MainPage() {
   const [suggestedTask, setSuggestedTask] = useState(null);
   const [showExtraColumns, setShowExtraColumns]  = useState(false);
   const [pomodoroStats, setPomodoroStats] = useState({count: 0, totalMinutes:0});
-
+  const [showCalendarView, setShowCalendarView] = useState(false);
 
   const getLabelColor = (label) => {
     switch (label) {
@@ -107,6 +113,14 @@ export default function MainPage() {
         setSuggestedTask(random);
       }
 
+      const events = res.data.map(task =>({
+        title: task.title,
+        start: new Date(task.due_date),
+        end: new Date(task.due_date),
+        allDay: true,
+        resource: task,
+      }));
+      setCalendarEvents(events);
     } catch (err) {
       console.error("Görevler alınırken hata:", err);
     }
@@ -291,6 +305,12 @@ export default function MainPage() {
                   className="px-6 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow"
                 >
                   {showExtraColumns ? "Daha Az Göster" : "Tüm Kategorileri Göster"}
+                </button>
+                <button
+                  onClick={() => setShowCalendarView(prev => !prev)}
+                  className="px-6 py-2 bg-indigo-500 text-white rounded-xl shadow hover:bg-indigo-600"
+                >
+                  {showCalendarView ? "Kart Görünümü" : "Takvim Görünümü"}
                 </button>
               </div>
             </div>
@@ -575,6 +595,29 @@ export default function MainPage() {
               <PomodoroTimer onStart={() => {}} /> {/* boş da olsa geçilmeli */}
             </FocusOverlay>
           )}
+
+          {/* calendar view */}
+          {showCalendarView && (
+              <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow">
+                <Calendar
+                  localizer={localizer}
+                  events={calendarEvents}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 500 }}
+                  views={['month', 'week', 'agenda']}
+                  onSelectEvent={(event) => handleTaskClick(event.resource)}
+                  eventPropGetter={(event) => ({
+                    style: {
+                      backgroundColor: "#6366f1",
+                      borderRadius: "8px",
+                      color: "white",
+                      padding: "4px",
+                    },
+                  })}
+                />
+              </div>
+            )}
         </section>
       </main>
     </>
