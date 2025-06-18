@@ -399,13 +399,13 @@ export default function MainPage() {
             <div className="flex justify-center">
                 <div className="bg-white dark:bg-gray-900 p-5 rounded-lg shadow-xl w-full max-w-md space-y-4">
                   <h2 className="text-xl font-semibold mb-3">Pomodoro İstatistikleri</h2>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Bugün toplam{" "}
-                    <span className="font-bold text-indigo-600 dark:text-indigo-400">
-                      {pomodoroStats.count}
-                    </span>{" "}
-                    Pomodoro yaptın ({pomodoroStats.totalMinutes} dk). Aferin sana! 💪
-                  </p>
+                  {pomodoroStats.count === 0 ? (
+                      <p className="text-gray-500 dark:text-gray-400 italic">Bugün henüz Pomodoro yapmadın. Hadi başlayalım! 🔥</p>
+                    ) : (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        Bugün toplam <span className="font-bold text-indigo-600 dark:text-indigo-400">{pomodoroStats.count}</span> Pomodoro yaptın ({pomodoroStats.totalMinutes} dk). Aferin sana! 💪
+                      </p>
+                    )}
                 </div>
             </div>            
             {/* Butonlar */}
