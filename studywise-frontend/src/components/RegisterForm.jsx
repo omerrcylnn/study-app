@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import api from "../axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -8,6 +9,12 @@ export default function RegisterForm() {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
+
+  const handleNavigateRegister = () => {
+    navigate("/login");
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -99,12 +106,21 @@ export default function RegisterForm() {
         required
       />
 
-      <button
+      <div className="flex justify-center p-4 gap-4">
+        <button
         type="submit"
-        className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+        className="w-50 bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
       >
         Kayıt Ol
       </button>
+      <button
+          type="button"
+          onClick={handleNavigateRegister}
+          className="w-50 bg-green-400 text-white py-2 px-4 rounded"
+        >
+          Giriş Yap
+        </button>
+      </div>
     </form>
   );
 }
